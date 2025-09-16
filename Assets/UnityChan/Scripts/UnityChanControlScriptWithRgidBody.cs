@@ -5,10 +5,11 @@
 //
 using System;
 using UnityEngine;
-using Unity.Netcode;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 using System.Collections;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace UnityChan
 {
@@ -17,11 +18,8 @@ namespace UnityChan
 	[RequireComponent(typeof(CapsuleCollider))]
 	[RequireComponent(typeof(Rigidbody))]
 
-	public class UnityChanControlScriptWithRgidBody : NetworkBehaviour
+	public class UnityChanControlScriptWithRgidBody : MonoBehaviour
 	{
-
-		private Vector2 _moveInput;
-		private bool _isKeySpace;
 		
 		public float animSpeed = 1.5f;				// アニメーション再生速度設定
 		public float lookSmoother = 3.0f;			// a smoothing setting for camera motion
@@ -72,30 +70,10 @@ namespace UnityChan
 			orgVectColCenter = col.center;
 		}
 	
-		[Unity.Netcode.ServerRpc]
-		private void SetInputServerRpc(float x, float y, bool space)
-		{
-			_moveInput = new Vector2(x, y);
-			_isKeySpace = space;
-		}
-
-		private void Update()
-		{
-			if (IsOwner)
-			{
-				SetInputServerRpc(
-					Input.GetAxisRaw("Horizontal"),
-					Input.GetAxisRaw("Vertical"),
-					Input.GetKey(KeyCode.Space)
-				);
-			}
-		}
-	
 		// 以下、メイン処理.リジッドボディと絡めるので、FixedUpdate内で処理を行う.
 		void FixedUpdate ()
 		{
-			if (IsServer)
-			{
+			/*
 				float h = Input.GetAxis("Horizontal"); // 入力デバイスの水平軸をhで定義
 				float v = Input.GetAxis("Vertical"); // 入力デバイスの垂直軸をvで定義
 				anim.SetFloat("Speed", v); // Animator側で設定している"Speed"パラメタにvを渡す
@@ -118,22 +96,6 @@ namespace UnityChan
 				else if (v < -0.1)
 				{
 					velocity *= backwardSpeed; // 移動速度を掛ける
-				}
-
-				if (Input.GetButtonDown("Jump"))
-				{
-					// スペースキーを入力したら
-
-					//アニメーションのステートがLocomotionの最中のみジャンプできる
-					if (currentBaseState.fullPathHash == locoState)
-					{
-						//ステート遷移中でなかったらジャンプできる
-						if (!anim.IsInTransition(0))
-						{
-							rb.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);
-							anim.SetBool("Jump", true); // Animatorにジャンプに切り替えるフラグを送る
-						}
-					}
 				}
 
 
@@ -226,7 +188,7 @@ namespace UnityChan
 						anim.SetBool("Rest", false);
 					}
 				}
-			}
+				*/
 		}
 
 		void OnGUI ()
