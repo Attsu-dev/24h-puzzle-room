@@ -596,7 +596,7 @@ GameObject:
   - component: {fileID: 320080923}
   - component: {fileID: 320080922}
   m_Layer: 5
-  m_Name: Button
+  m_Name: backButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -617,10 +617,10 @@ RectTransform:
   - {fileID: 908294063}
   m_Father: {fileID: 1068276884}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -700, y: 360}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 120, y: -120}
+  m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &320080922
 MonoBehaviour:
@@ -634,6 +634,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffc88414a71435449a0ba46fd13c74a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backButton: {fileID: 320080923}
 --- !u!114 &320080923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -931,8 +932,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 70
-  m_fontSizeBase: 70
+  m_fontSize: 100
+  m_fontSizeBase: 100
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1376,7 +1377,7 @@ MonoBehaviour:
   mainCamera: {fileID: 1295196728}
   subCamera: {fileID: 1539949269}
   forcusMonitorIndex: -1
-  canvasObject: {fileID: 0}
+  canvasObject: {fileID: 1068276883}
 --- !u!1 &1055155120
 GameObject:
   m_ObjectHideFlags: 0
@@ -1429,7 +1430,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1068276884
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1483,9 +1484,9 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1600, y: 900}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -2331,8 +2332,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -350}
-  m_SizeDelta: {x: 500, y: 100}
+  m_AnchoredPosition: {x: 0, y: -420}
+  m_SizeDelta: {x: 1000, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1550121718
 MonoBehaviour:
