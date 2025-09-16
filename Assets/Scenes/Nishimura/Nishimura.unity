@@ -1378,6 +1378,7 @@ MonoBehaviour:
   subCamera: {fileID: 1539949269}
   forcusMonitorIndex: -1
   canvasObject: {fileID: 1068276883}
+  anagram: {fileID: 1281035821}
 --- !u!1 &1055155120
 GameObject:
   m_ObjectHideFlags: 0
@@ -1633,6 +1634,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1281035820}
+  - component: {fileID: 1281035821}
   m_Layer: 0
   m_Name: Anagram
   m_TagString: Untagged
@@ -1657,6 +1659,20 @@ Transform:
   - {fileID: 1836153940}
   m_Father: {fileID: 1055155121}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1281035821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1281035819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c56d19e52a49ac54f819e778a1d02e6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  japaneseWordList: {fileID: 4900000, guid: fb4940437a552c842a46f85153bf823e, type: 3}
+  puzzleText: {fileID: 1836153941}
 --- !u!1 &1295196726
 GameObject:
   m_ObjectHideFlags: 0
@@ -2577,7 +2593,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042\u3071\u307E\u3093\u3093\u3093"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d0bd06b9c1d67d145a0c3f9df39e9e5a, type: 2}
   m_sharedMaterial: {fileID: 4693560609289732832, guid: d0bd06b9c1d67d145a0c3f9df39e9e5a, type: 2}
