@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ClickMonitor : MonoBehaviour
 {
@@ -6,9 +7,16 @@ public class ClickMonitor : MonoBehaviour
     public Camera subCamera;    // 切り替え後のカメラ
     private bool isMainActive = true;
 
+    public InputField inputField;
+
     void OnMouseDown()
     {
         subCamera.enabled = true;
         Debug.Log($"{name} をクリック。カメラを切り替えました");
+    }
+
+    public void OnValueChanged(string text)
+    {
+        Debug.Log(text);
     }
 }
