@@ -16,20 +16,45 @@ using RelayJoinAllocation = Unity.Services.Relay.Models.JoinAllocation;
 public class NetworkUI : MonoBehaviour
 {
     [Header("UI Elements")]
-    [SerializeField] private Button hostButton;
-    [SerializeField] private Button clientButton;
-    [SerializeField] private TMP_InputField joinCodeInputField; // TextMeshProの場合
-    // [SerializeField] private InputField joinCodeInputField; // 通常のInput Fieldの場合
-    [SerializeField] private TMP_Text joinCodeText; // ホストがJoinコードを表示する用
+    private string _joinCode;
+    private string joinCode;
 
-void Start()
+    void Start()
     {
-        // --- ボタンに関数を割り当てる ---
-        hostButton.onClick.AddListener(() => StartHost());
-        clientButton.onClick.AddListener(() => StartClient());
-        
-        // --- 元のStart関数の処理 ---
         InitializeAndSignIn();
+    }
+
+    void OnGUI()
+    {
+        GUILayout.BeginArea(new Rect(10, 10, 300, 600));
+        if (!NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
+        {
+            StartButtons();
+        }
+        else
+        {
+            StatusLabels();
+        }
+
+        GUILayout.EndArea();
+    }
+
+    private void StartButtons()
+    {
+        GUILayout.Label("24h-puzzle-room\n");
+
+        if (GUILayout.Button("Host"))
+        {
+            StartHost();
+        }
+
+        if (GUILayout.Button("Client"))
+        {
+            StartClient(_joinCode.Trim());
+        }
+        
+        GUILayout.Label("JoinCode");
+        _joinCode = GUILayout.TextField(_joinCode);
     }
 
     async void InitializeAndSignIn()
@@ -48,12 +73,10 @@ void Start()
     {
         try
         {
-            // (中身は変更なし)
             RelayAllocation allocation = await RelayService.Instance.CreateAllocationAsync(5);
-            string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+            joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             
             // UIにJoinコードを表示
-            joinCodeText.text = $"Join Code: {joinCode}";
             Debug.Log($"Join Code: {joinCode}");
 
             var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
@@ -74,13 +97,10 @@ void Start()
     }
 
     // クライアントとしてRelayサーバーに参加する
-    public async void StartClient() // Taskからvoidに変更、引数も削除
+    public async void StartClient(string joinCode) // Taskからvoidに変更、引数も削除
     {
         try
         {
-            // InputFieldからJoinコードを取得
-            string joinCode = joinCodeInputField.text.Trim();
-            
             RelayJoinAllocation allocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
             
             var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
@@ -99,5 +119,20 @@ void Start()
         {
             Debug.LogError($"Relay start client failed: {e.Message}");
         }
+    }
+
+    private void StatusLabels()
+    {
+        var mode = NetworkManager.Singleton.IsHost ? "Host" :
+            NetworkManager.Singleton.IsServer ? "Server" : "Client";
+        if (joinCode == null)
+        {
+            joinCode = _joinCode;
+        }
+
+        GUILayout.Label("Transport: " +
+                        NetworkManager.Singleton.NetworkConfig.NetworkTransport.GetType().Name);
+        GUILayout.Label("Mode: " + mode);
+        GUILayout.Label("JoinCode: " + joinCode);
     }
 }

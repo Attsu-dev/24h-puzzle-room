@@ -64,6 +64,8 @@ public class CharacterMove : NetworkBehaviour
         {
             float inputX = Input.GetAxis("Horizontal");
             float inputY = Input.GetAxis("Vertical");
+            var camera = Camera.main.GetComponent<PlayerFollowCamera>();
+            camera.Player = this.transform;
             SetMoveInputServerRpc(inputX, inputY);
         }
 
