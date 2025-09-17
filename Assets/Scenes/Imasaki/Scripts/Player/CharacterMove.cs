@@ -44,6 +44,7 @@ public class CharacterMove : NetworkBehaviour
     static int locoState = Animator.StringToHash ("Base Layer.Locomotion");
     static int jumpState = Animator.StringToHash ("Base Layer.Jump");
     static int restState = Animator.StringToHash ("Base Layer.Rest");
+    static int walkBackState = Animator.StringToHash ("Base Layer.WalkBack");
 
     void Start()
     {
@@ -124,10 +125,16 @@ public class CharacterMove : NetworkBehaviour
 		if (moveInput.y > 0.1)
 		{
 			velocity.y *= forwardSpeed; // 移動速度を掛ける
+			anim.SetBool("WalkBack", true);
 		}
 		else if (moveInput.y < -0.1)
 		{
 			velocity.y *= backwardSpeed; // 移動速度を掛ける
+			anim.SetBool("WalkBack", true);
+		}
+		else
+		{
+			anim.SetBool("WalkBack", false);
 		}
 		
 		// 上下のキー入力でキャラクターを移動させる
