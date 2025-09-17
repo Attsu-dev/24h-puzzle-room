@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class ClickBackButton : MonoBehaviour
 {
-    public Button backButton;  // Inspector‚Åƒ{ƒ^ƒ“‚ðŠ„‚è“–‚Ä
+    [SerializeField] private Button backButton;
     void Start()
     {
         backButton.onClick.AddListener(OnBackButtonClicked);

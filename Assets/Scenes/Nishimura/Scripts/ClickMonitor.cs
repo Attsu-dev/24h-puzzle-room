@@ -4,7 +4,7 @@ public class ClickMonitor : MonoBehaviour
 {
     void OnMouseDown()   // マウスクリック時に自動で呼ばれる
     {
-        if (GameMaster.Instance != null && GameMaster.Instance.forcusMonitorIndex == -1)
+        if (GameMaster.Instance != null && GameMaster.Instance.forcusMonitorID == 0)
         {
             GameMaster.Instance.OnMonitorClicked(gameObject);
         }
