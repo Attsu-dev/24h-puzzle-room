@@ -7,6 +7,7 @@ using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Random = System.Random;
 // RelayのAllocationモデルに 'RelayAllocation' という別名を付ける
 using RelayAllocation = Unity.Services.Relay.Models.Allocation;
 
@@ -18,10 +19,16 @@ public class NetworkUI : MonoBehaviour
     [Header("UI Elements")]
     private string _joinCode;
     private string joinCode;
+    private string _playerName = "プレイヤー名" + (new Random().Next(100,1000)).ToString();
 
     void Start()
     {
         InitializeAndSignIn();
+    }
+
+    public string PlayerName
+    {
+        get => _playerName;
     }
 
     void OnGUI()
@@ -55,6 +62,9 @@ public class NetworkUI : MonoBehaviour
         
         GUILayout.Label("JoinCode");
         _joinCode = GUILayout.TextField(_joinCode);
+        
+        GUILayout.Label("PlayerName");
+        _playerName = GUILayout.TextField(_playerName);
     }
 
     async void InitializeAndSignIn()
