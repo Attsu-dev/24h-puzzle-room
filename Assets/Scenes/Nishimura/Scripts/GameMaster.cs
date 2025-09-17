@@ -1,5 +1,7 @@
 using UnityEngine;
 using TMPro;
+using WebGLSupport;
+
 public class GameMaster : MonoBehaviour
 {
     public static GameMaster Instance { get; private set; }
@@ -12,11 +14,18 @@ public class GameMaster : MonoBehaviour
     public GameObject canvasObject;
     public Anagram anagram;
     public TMP_InputField answerInputField;
+    private bool solved = false;
+    public CountdownTimer timer1;
 
 
     void Awake()
     {
         Instance = this;
+    }
+
+    void start()
+    {
+        WebGLSupport.WebGLWindow.SwitchFullscreen();
     }
 
     // プレイヤーがモニターをクリックしたとき
@@ -64,6 +73,7 @@ public class GameMaster : MonoBehaviour
         {
             Debug.Log("正解です！");
             // 正解時の処理をここに追加
+            solved = true;
         }
         else
         {
@@ -73,4 +83,18 @@ public class GameMaster : MonoBehaviour
         // 入力フィールドをクリアする
         answerInputField.text = "";
     }
+
+    public void OnTimerFinished(int timerID)
+    {
+        if (!solved)
+        {
+            Debug.Log("ゲームオーバー");
+        }
+        CreateNewQuestion();
+
+        solved = false;
+        timer1.Reset();
+    }
+
+    
 }
