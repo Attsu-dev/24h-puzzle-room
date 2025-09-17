@@ -15,7 +15,6 @@ public class CharacterMove : NetworkBehaviour
     public bool useCurves = true;				// Mecanimでカーブ調整を使うか設定する
     // このスイッチが入っていないとカーブは使われない
     public float useCurvesHeight = 0.5f;		// カーブ補正の有効高さ（地面をすり抜けやすい時には大きくする）
-
     // 以下キャラクターコントローラ用パラメタ
     // 前進速度
     public float forwardSpeed = 7.0f;
@@ -35,6 +34,8 @@ public class CharacterMove : NetworkBehaviour
     private Vector3 orgVectColCenter;
     private Animator anim;							// キャラにアタッチされるアニメーターへの参照
     private AnimatorStateInfo currentBaseState;			// base layerで使われる、アニメーターの現在の状態の参照
+    private NetworkVariable<Unity.Collections.FixedString64Bytes> _playerName = new();
+    [SerializeField] private TextMesh playerNameTextMesh;
 
     private GameObject cameraObject;	// メインカメラへの参照
 		
@@ -56,6 +57,9 @@ public class CharacterMove : NetworkBehaviour
         // CapsuleColliderコンポーネントのHeight、Centerの初期値を保存する
         orgColHight = col.height;
         orgVectColCenter = col.center;
+
+        _playerName.OnValueChanged += OnChangePlayerName;
+        playerNameTextMesh.text = _playerName.Value.Value;
     }
 
     void Update()
@@ -67,6 +71,8 @@ public class CharacterMove : NetworkBehaviour
             var camera = Camera.main.GetComponent<PlayerFollowCamera>();
             camera.Player = this.transform;
             SetMoveInputServerRpc(inputX, inputY);
+            var networkUI = GameObject.Find("NetworkUI").GetComponent<NetworkUI>();
+            SetPlayerNameServerRpc(networkUI.PlayerName);
         }
 
         if (this.IsServer)
@@ -77,6 +83,21 @@ public class CharacterMove : NetworkBehaviour
                 transform.position = new Vector3(0, 2, 0);
             }
         }
+    }
+
+    [Unity.Netcode.ServerRpc(RequireOwnership = true)]
+    private void SetPlayerNameServerRpc(string playerName)
+    {
+	    _playerName.Value = playerName;
+    }
+
+    void OnChangePlayerName(Unity.Collections.FixedString64Bytes prev, Unity.Collections.FixedString64Bytes current)
+    {
+	    Debug.Log("OnChangePlayerName");
+	    if (playerNameTextMesh != null)
+	    {
+		    playerNameTextMesh.text = current.Value.ToString();
+	    }
     }
 
     [Unity.Netcode.ServerRpc]
