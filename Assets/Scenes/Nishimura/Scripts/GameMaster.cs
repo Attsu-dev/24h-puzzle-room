@@ -4,29 +4,27 @@ using WebGLSupport;
 
 public class GameMaster : MonoBehaviour
 {
+    // これがあることで、他のスクリプトからGameMasterにアクセスできる（シングルトン）
     public static GameMaster Instance { get; private set; }
-    public Camera mainCamera;
-    public Camera subCamera;
-    public int forcusMonitorIndex = -1; // -1はどのモニターもフォーカスしていない状態
-
-    private string answer = "";
-
-    public GameObject canvasObject;
-    public Anagram anagram;
-    public TMP_InputField answerInputField;
-    private bool solved = false;
-    public CountdownTimer timer1;
-
-
     void Awake()
     {
         Instance = this;
     }
 
-    void start()
-    {
-        WebGLSupport.WebGLWindow.SwitchFullscreen();
-    }
+    // public変数
+    public int forcusMonitorID = 0; // 0はどのモニターにもフォーカスしていない状態
+
+    // GameMasterで制御するオブジェクト
+    [SerializeField] private Camera mainCamera;
+    [SerializeField] private Camera subCamera;
+    [SerializeField] private GameObject canvasObject;
+    [SerializeField] private Anagram anagram;
+    [SerializeField] private TMP_InputField answerInputField;
+    [SerializeField] private CountdownTimer timer1;
+
+    // private変数
+    private bool solved = false;
+    private string answer = "";
 
     // プレイヤーがモニターをクリックしたとき
     public void OnMonitorClicked(GameObject clickedMonitor)
@@ -38,7 +36,7 @@ public class GameMaster : MonoBehaviour
         subCamera.enabled = true;
 
         // クリックされたモニターにフォーカスする
-        forcusMonitorIndex = 0; // ここでは仮に0を設定。実際にはclickedMonitorに基づいて設定する必要があります。
+        forcusMonitorID = 1; // ここでは仮に1を設定。実際にはclickedMonitorに基づいて設定する必要があります。
 
         // Canvasを表示する
         canvasObject.SetActive(true);
@@ -53,7 +51,7 @@ public class GameMaster : MonoBehaviour
         mainCamera.enabled = true;
         subCamera.enabled = false;
         // フォーカスを解除する
-        forcusMonitorIndex = -1;
+        forcusMonitorID = 0;
         // Canvasを非表示にする
         canvasObject.SetActive(false);
         // 入力フィールドをクリアする

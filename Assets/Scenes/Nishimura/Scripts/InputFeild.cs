@@ -3,7 +3,7 @@ using TMPro;
 
 public class InputFeild : MonoBehaviour
 {
-    public TMP_InputField inputField; // Inspector‚ÅŠ„‚è“–‚Ä
+    [SerializeField] private TMP_InputField inputField; // Inspector‚ÅŠ„‚è“–‚Ä
 
     void Start()
     {
