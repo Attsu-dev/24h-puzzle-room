@@ -5028,7 +5028,7 @@ Transform:
   m_GameObject: {fileID: 6120735354289250569}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0.5, y: 1.8, z: 0}
+  m_LocalPosition: {x: 0, y: 1.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7369,8 +7369,8 @@ MonoBehaviour:
   lookSmoother: 3
   useCurves: 1
   useCurvesHeight: 0.5
-  forwardSpeed: 2
-  backwardSpeed: 2
+  forwardSpeed: 1
+  backwardSpeed: 1
   rotateSpeed: 2
   jumpPower: 3
   playerNameTextMesh: {fileID: 5390514657296174281}
