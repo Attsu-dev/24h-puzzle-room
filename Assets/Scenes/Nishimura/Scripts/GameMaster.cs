@@ -22,6 +22,7 @@ public class GameMaster : NetworkBehaviour
     [SerializeField] private GameObject[] puzzlePanels;
     [SerializeField] private TextAsset japaneseWordList; // 単語リスト(txt)をInspectorで割り当て
     [SerializeField] private TextMeshPro anagramText; // 子のTextMeshProを割り当て
+    [SerializeField] private TextMeshPro dialText; // 子のTextMeshProを割り当て
 
     // private変数
     private string[] answers = new string[4];
@@ -29,6 +30,11 @@ public class GameMaster : NetworkBehaviour
 
     // 共有変数
     public NetworkVariable<FixedString128Bytes> sharedAnagram = new NetworkVariable<FixedString128Bytes>(
+        new FixedString128Bytes(""),
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+    public NetworkVariable<FixedString128Bytes> sharedDial = new NetworkVariable<FixedString128Bytes>(
         new FixedString128Bytes(""),
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
@@ -55,10 +61,17 @@ public class GameMaster : NetworkBehaviour
             if (anagramText != null)
                 anagramText.text = sharedAnagram.Value.ToString();
         };
+        sharedDial.OnValueChanged += (oldVal, newVal) =>
+        {
+            if (dialText != null)
+                dialText.text = sharedDial.Value.ToString();
+        };
 
         // 参加時にも最新値を反映
         if (anagramText != null)
             anagramText.text = sharedAnagram.Value.ToString();
+        if (dialText != null)
+            dialText.text = sharedDial.Value.ToString();
 
         if (IsServer)
         {
@@ -86,7 +99,10 @@ public class GameMaster : NetworkBehaviour
                     .Replace("\r", "")   // 改行コードを整理
                     .Split('\n');
             }
-            CreateNewQuestion(1);
+            for (int i = 1; i <= 2; i++)
+            {
+                CreateNewQuestion(i);
+            }
         }
     }
 
@@ -138,7 +154,11 @@ public class GameMaster : NetworkBehaviour
         {
             CreateAnagram();
         }
-        solvedList[monitorID-1] = new FixedString32Bytes("0");
+        else if (monitorID == 2)
+        {
+            CreateDial();
+        }
+        solvedList[monitorID - 1] = new FixedString32Bytes("0");
     }
 
     public void OnSubmitAnswer(string userAnswer)
@@ -175,7 +195,7 @@ public class GameMaster : NetworkBehaviour
         if (userAnswer == answers[MonitorID-1])
         {
             Debug.Log("正解です！（サーバー判定）");
-            solvedList[0] = new FixedString32Bytes("1");
+            solvedList[MonitorID - 1] = new FixedString32Bytes("1");
         }
         else
         {
@@ -190,7 +210,7 @@ public class GameMaster : NetworkBehaviour
 
         // ランダムに1つ選ぶ
         string answer = words[Random.Range(0, words.Length)].Trim();
-        if (string.IsNullOrEmpty(answer) || answer.Length <= 2) { CreateAnagram(); return; }
+        if (string.IsNullOrEmpty(answer) || answer.Length <= 3) { CreateAnagram(); return; }
 
         // 文字をシャッフル
         char[] chars = answer.ToCharArray();
@@ -205,6 +225,72 @@ public class GameMaster : NetworkBehaviour
         }
         sharedAnagram.Value = new FixedString128Bytes(new string(chars));
         answers[0] = answer;
+    }
+
+    char[] hiraganaList = new char[]
+    {
+        'あ','い','う','え','お',
+        'か','き','く','け','こ',
+        'さ','し','す','せ','そ',
+        'た','ち','つ','て','と',
+        'な','に','ぬ','ね','の',
+        'は','ひ','ふ','へ','ほ',
+        'ま','み','む','め','も',
+        'や','ゆ','よ',
+        'ら','り','る','れ','ろ',
+        'わ','を','ん',
+        'が','ぎ','ぐ','げ','ご',
+        'ざ','じ','ず','ぜ','ぞ',
+        'だ','ぢ','づ','で','ど',
+        'ば','び','ぶ','べ','ぼ',
+        'ぱ','ぴ','ぷ','ぺ','ぽ',
+        'ゃ','ゅ','ょ',
+        'ぁ','ぃ','ぅ','ぇ','ぉ'
+    };
+
+    char ShiftHiragana(char c)
+    {
+        if (c == 'あ') return 'い';
+        if (c == 'ん') return 'を';
+        if (c == 'が') return 'ぎ';
+        if (c == 'ど') return 'で';
+        if (c == 'ば') return 'び';
+        if (c == 'ぼ') return 'べ';
+        if (c == 'ぷ') return 'ぴ';
+        if (c == 'ぽ') return 'ぺ';
+        if (c == 'ゃ') return 'ゅ';
+        if (c == 'ょ') return 'ゅ';
+        if (c == 'ぁ') return 'ぃ';
+        if (c == 'ぉ') return 'ぇ';
+        int index = System.Array.IndexOf(hiraganaList, c);
+        if (index < 0) return c; // リストにない文字はそのまま
+
+        // 前か後ろにずらす
+        int offset = Random.Range(0, 2) == 0 ? -1 : 1;
+        return hiraganaList[index + offset];
+    }
+
+    void CreateDial()
+    {
+        if (words == null || words.Length == 0) return;
+
+        // ランダムに1つ選ぶ
+        string answer;
+        do
+        {
+            answer = words[Random.Range(0, words.Length)].Trim();
+        } while (answer.Contains('ー') || answer.Contains('っ'));
+        if (string.IsNullOrEmpty(answer) || answer.Length <= 3) { CreateDial(); return; }
+
+        // 各文字を前後にずらす（濁点はそのまま）
+        char[] chars = answer.ToCharArray();
+        for (int i = 0; i < chars.Length; i++)
+        {
+            chars[i] = ShiftHiragana(chars[i]);
+        }
+
+        sharedDial.Value = new FixedString128Bytes(new string(chars));
+        answers[1] = answer;
     }
 
 }
