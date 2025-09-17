@@ -8,14 +8,14 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Imasaki/Imasaki.unity
     guid: 32c534de3b033e649afc92e034515941
   - enabled: 0
     path: Assets/Scenes/Nishimura/Nishimura.unity
     guid: 9f1ab564b21b89043bc9e1a87e6321bc
   - enabled: 1
-    path: Assets/Scenes/GameScene.unity
+    path: Assets/Scenes/GameScene/GameScene.unity
     guid: 934073375e1e87246b12ccf57ee3d50b
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

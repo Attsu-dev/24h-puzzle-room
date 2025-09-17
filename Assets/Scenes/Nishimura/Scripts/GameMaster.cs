@@ -16,7 +16,7 @@ public class GameMaster : MonoBehaviour
 
     // GameMasterで制御するオブジェクト
     [SerializeField] private Camera mainCamera;
-    [SerializeField] private Camera subCamera;
+    [SerializeField] private Camera[] subCameras;
     [SerializeField] private GameObject canvasObject;
     [SerializeField] private Puzzle anagram;
     [SerializeField] private TMP_InputField answerInputField;
@@ -28,17 +28,29 @@ public class GameMaster : MonoBehaviour
     private bool solved = false;
     private string answer = "";
 
+    int MonitorNameToID(string monitorName)
+    {
+        switch (monitorName)
+        {
+            case "Monitor_A": return 1;
+            case "Monitor_B": return 2;
+            case "Monitor_C": return 3;
+            case "Monitor_D": return 4;
+            default:
+                Debug.LogWarning($"未対応のモニター名: {monitorName}");
+                return -1; // エラー
+        }
+    }
+
     // プレイヤーがモニターをクリックしたとき
     public void OnMonitorClicked(GameObject clickedMonitor)
     {
         Debug.Log($"Cube {clickedMonitor.name} がクリックされました");
+        forcusMonitorID = MonitorNameToID(clickedMonitor.name);
 
         // カメラを切り替える
-        mainCamera.enabled = false;
-        subCamera.enabled = true;
-
-        // クリックされたモニターにフォーカスする
-        forcusMonitorID = 1; // ここでは仮に1を設定。実際にはclickedMonitorに基づいて設定する必要があります。
+        //mainCamera.enabled = false;
+        subCameras[forcusMonitorID-1].enabled = true;
 
         // Canvasを表示する
         canvasObject.SetActive(true);
@@ -50,8 +62,8 @@ public class GameMaster : MonoBehaviour
     public void OnBackButtonClicked()
     {
         // カメラを元に戻す
-        mainCamera.enabled = true;
-        subCamera.enabled = false;
+        //mainCamera.enabled = true;
+        subCameras[forcusMonitorID-1].enabled = false;
         // フォーカスを解除する
         forcusMonitorID = 0;
         // Canvasを非表示にする
