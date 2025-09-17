@@ -123,14 +123,13 @@ public class CharacterMove : NetworkBehaviour
 		//以下のvの閾値は、Mecanim側のトランジションと一緒に調整する
 		if (moveInput.y > 0.1)
 		{
-			velocity *= forwardSpeed; // 移動速度を掛ける
+			velocity.y *= forwardSpeed; // 移動速度を掛ける
 		}
 		else if (moveInput.y < -0.1)
 		{
-			velocity *= backwardSpeed; // 移動速度を掛ける
+			velocity.y *= backwardSpeed; // 移動速度を掛ける
 		}
-
-
+		
 		// 上下のキー入力でキャラクターを移動させる
 		transform.localPosition += velocity * Time.fixedDeltaTime;
 
@@ -158,12 +157,7 @@ public class CharacterMove : NetworkBehaviour
 			{
 				resetCollider();
 			}
-
-			// スペースキーを入力したらRest状態になる
-			if (Input.GetButtonDown("Jump"))
-			{
-				anim.SetBool("Rest", true);
-			}
+			
 		}
 		// REST中の処理
 		// 現在のベースレイヤーがrestStateの時

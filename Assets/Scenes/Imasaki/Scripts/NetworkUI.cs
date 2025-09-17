@@ -33,7 +33,7 @@ public class NetworkUI : MonoBehaviour
 
     void OnGUI()
     {
-        GUILayout.BeginArea(new Rect(10, 10, 300, 600));
+        GUILayout.BeginArea(new Rect(20, 20, 300, 600));
         if (!NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
         {
             StartButtons();
