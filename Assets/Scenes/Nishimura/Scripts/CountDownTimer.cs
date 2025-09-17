@@ -29,7 +29,10 @@ public class CountdownTimer : MonoBehaviour
             }
 
             // 秒単位で表示（小数切り捨て）
-            timerText.text = Mathf.CeilToInt(timeRemaining).ToString();
+            int totalSeconds = Mathf.CeilToInt(timeRemaining);
+            System.TimeSpan t = System.TimeSpan.FromSeconds(totalSeconds);
+            timerText.text = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
+
         }
     }
 
