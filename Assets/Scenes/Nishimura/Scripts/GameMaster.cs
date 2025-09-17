@@ -18,9 +18,11 @@ public class GameMaster : MonoBehaviour
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Camera subCamera;
     [SerializeField] private GameObject canvasObject;
-    [SerializeField] private Anagram anagram;
+    [SerializeField] private Puzzle anagram;
     [SerializeField] private TMP_InputField answerInputField;
     [SerializeField] private CountdownTimer timer1;
+    [SerializeField] private GameObject solvedPanel;
+    [SerializeField] private GameObject PuzzlePanel;
 
     // private•Ï”
     private bool solved = false;
@@ -63,6 +65,8 @@ public class GameMaster : MonoBehaviour
     {
         // ‚±‚±‚ÅV‚µ‚¢–â‘è‚Æ“š‚¦‚ğİ’è‚·‚é
         answer = anagram.CreateNextQuestion();
+        solvedPanel.SetActive(false);
+        PuzzlePanel.SetActive(true);
     }
 
     public void OnSubmitAnswer(string userAnswer)
@@ -72,6 +76,8 @@ public class GameMaster : MonoBehaviour
             Debug.Log("³‰ğ‚Å‚·I");
             // ³‰ğ‚Ìˆ—‚ğ‚±‚±‚É’Ç‰Á
             solved = true;
+            PuzzlePanel.SetActive(false);
+            solvedPanel.SetActive(true);
         }
         else
         {
