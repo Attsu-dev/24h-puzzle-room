@@ -36,7 +36,7 @@ public class CountdownTimer : NetworkBehaviour
         }
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (!IsServer || !isRunning) return;
 
@@ -54,11 +54,18 @@ public class CountdownTimer : NetworkBehaviour
     {
         int totalSeconds = Mathf.CeilToInt(time);
         System.TimeSpan t = System.TimeSpan.FromSeconds(totalSeconds);
+        Debug.Log(totalSeconds);
 
         if (timerText != null)
         {
-            if (timerID != 4) timerText.text = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
-            else timerText.text = string.Format("{0:D2}:{1:D2}:{2:D2}", t.Hours, t.Minutes, t.Seconds);
+            if (timerID == 4)
+            {
+                timerText.text = string.Format("{0:D2}:{1:D2}:{2:D2}", t.Hours, t.Minutes, t.Seconds);
+            }
+            else
+            {
+                timerText.text = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
+            }
         }
     }
 
