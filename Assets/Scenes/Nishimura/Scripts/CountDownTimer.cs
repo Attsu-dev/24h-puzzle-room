@@ -56,7 +56,10 @@ public class CountdownTimer : NetworkBehaviour
         System.TimeSpan t = System.TimeSpan.FromSeconds(totalSeconds);
 
         if (timerText != null)
-            timerText.text = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
+        {
+            if (timerID != 4) timerText.text = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
+            else timerText.text = string.Format("{0:D2}:{1:D2}:{2:D2}", t.Hours, t.Minutes, t.Seconds);
+        }
     }
 
     // ===== サーバー専用操作 =====
