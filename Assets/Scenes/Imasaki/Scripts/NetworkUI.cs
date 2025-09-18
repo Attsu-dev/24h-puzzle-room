@@ -7,6 +7,7 @@ using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.Networking.Transport.Relay;
 using Random = System.Random;
 // RelayのAllocationモデルに 'RelayAllocation' という別名を付ける
 using RelayAllocation = Unity.Services.Relay.Models.Allocation;
@@ -83,13 +84,14 @@ public class NetworkUI : MonoBehaviour
     {
         try
         {
-            RelayAllocation allocation = await RelayService.Instance.CreateAllocationAsync(5);
+            RelayAllocation allocation = await RelayService.Instance.CreateAllocationAsync(maxConnections:5,region:null);
             joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             
             // UIにJoinコードを表示
             Debug.Log($"Join Code: {joinCode}");
 
             var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+            transport.SetRelayServerData(new RelayServerData(allocation, "wss"));
             transport.MaxPacketQueueSize = 4096;
             transport.SetHostRelayData(
                 allocation.RelayServer.IpV4,
@@ -115,6 +117,7 @@ public class NetworkUI : MonoBehaviour
             RelayJoinAllocation allocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
             
             var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+            transport.SetRelayServerData(new RelayServerData(allocation, "wss"));
             transport.SetClientRelayData(
                 allocation.RelayServer.IpV4,
                 (ushort)allocation.RelayServer.Port,
