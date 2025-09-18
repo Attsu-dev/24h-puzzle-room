@@ -90,6 +90,7 @@ public class NetworkUI : MonoBehaviour
             Debug.Log($"Join Code: {joinCode}");
 
             var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+            transport.MaxPacketQueueSize = 4096;
             transport.SetHostRelayData(
                 allocation.RelayServer.IpV4,
                 (ushort)allocation.RelayServer.Port,
